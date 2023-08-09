@@ -23,6 +23,9 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@elastic/elasticsearch": "^8.9.0",
+    "@nestjs/config": "^3.0.0",
+    "@nestjs/elasticsearch": "^10.0.1",
     "@nestjs/schematics": "^10.0.1",
     "@nestjs/testing": "^10.0.2",
     "@nrwl/nest": "^16.6.0",
