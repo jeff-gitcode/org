@@ -8,4 +8,4 @@ import { SearchModule } from '../search/search.module';
   controllers: [MoviesController],
   providers: [MoviesService],
 })
-export class MoviesModule {}
+export class MoviesModule { }

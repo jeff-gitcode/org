@@ -1,5 +1,8 @@
 'use client';
 
+import axios from 'axios';
+import { headers } from 'next/dist/client/components/headers';
+import { useState } from 'react';
 import styled from 'styled-components';
 
 const StyledPage = styled.div`
@@ -8,6 +11,27 @@ const StyledPage = styled.div`
 `;
 
 export default async function Index() {
+  const [searchResponse, setSearchResponse] = useState([]);
+  const [totalValue, setTotalValue] = useState();
+
+  const handleChange = async (e: any) => {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+    };
+    debugger;
+    const { data } = await axios.post('http://localhost:3000/api/movies/search', {
+      data: {
+        title: e.target.value,
+      },
+    }, { headers: headers },
+    );
+
+    setSearchResponse(data.results);
+    setTotalValue(data.total.value);
+  };
+
   /*
    * Replace the elements below with your own.
    *
@@ -15,7 +39,58 @@ export default async function Index() {
    */
   return (
     <StyledPage>
-      <div className="wrapper">
+      <div className='App'>
+        <div className='container search-table'>
+          <div className='search-box'>
+            <div className='row'>
+              <div className='col-md-3'>
+                <h5>Search All Fields</h5>
+              </div>
+              <div className='col-md-9'>
+                <input
+                  type='text'
+                  id='myInput'
+                  onChange={handleChange}
+                  className='form-control'
+                  placeholder='Search IMDB movies'></input>
+              </div>
+            </div>
+          </div>
+          <div className='search-list'>
+            <h3>
+              {totalValue ?? 0} {totalValue ?? 0 > 1 ? 'Records' : 'Record'} Found
+            </h3>
+            <table className='table' id='myTable'>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Overview</th>
+                  <th>Revenue:Budget ($)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {searchResponse.map((res: any, idx) => (
+                  <tr key={idx}>
+                    <td className='title'>{res.title}</td>
+                    <td>
+                      <p>{res.overview}</p>
+                      <sub>{res.tagline}</sub>
+                    </td>
+                    <td>
+                      <p>
+                        <sub>
+                          {res.revenue.toLocaleString()}:{res.budget.toLocaleString()}
+                        </sub>
+                      </p>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      {/* <div className="wrapper">
         <div className="container">
           <div id="welcome">
             <h1>
@@ -417,7 +492,7 @@ export default async function Index() {
             </svg>
           </p>
         </div>
-      </div>
+      </div> */}
     </StyledPage>
   );
 }
